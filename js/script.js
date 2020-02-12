@@ -8,12 +8,14 @@ const emailInput = document.getElementById('mail');
 const emailSpan = document.getElementById('mail-span');
 const jobTitle = document.getElementById('title');
 const jobTitleOther = document.getElementById('other-title');
+const jobTitleOtherLabel = document.getElementById('other-title-label');
 jobTitleOther.style.display = 'none';
+jobTitleOtherLabel.style.display = 'none';
 
 // Shirt Info
-const size = document.getElementById('size');
 const design = document.getElementById('design');
 const color = document.getElementById('color');
+const colorOptions = color.children;
 const noColor = document.createElement('option');
 noColor.innerHTML = 'Please select a T-Shirt Theme';
 color.insertBefore(noColor, color.childNodes[0]);
@@ -32,11 +34,11 @@ window.onload = function()
   nameInput.focus();
 
   // Until design theme is selected no color options appear
-  for (let i = 0; i < color.length; i++)
+  for (let i = 0; i < colorOptions.length; i++)
   {
     if (i > 0)
     {
-      color[i].hidden = true;
+      colorOptions[i].hidden = true;
     }
   }  
 };
@@ -78,16 +80,22 @@ function showColors(theme, index)
   noColor.selected = false;
 
   // For loop to traverse the array
-  for (let i = 0; i < color.length; i++)
+  for (let i = 0; i < colorOptions.length; i++)
   {
     // Show color options that match theme
-    if (color[i].textContent.includes(theme))
+    if (colorOptions[i].textContent.includes(theme))
     {
-      color[i].hidden = false;
+      colorOptions[i].hidden = false;
+
+      // Set element = index to selected 
+      if (i == index)
+      {
+        colorOptions[i].selected = true;
+      }
     }
     else
     {
-      color[i].hidden = true;
+      colorOptions[i].hidden = true;
     }
   }
 }
@@ -125,10 +133,12 @@ jobTitle.addEventListener('change', (e) =>
     if (e.target.value == 'other')
     {
       jobTitleOther.style.display = '';
+      jobTitleOtherLabel.style.display = '';
     }
     else
     {
       jobTitleOther.style.display = 'none';
+      jobTitleOtherLabel.style.display = 'none';
     }
 });
 
@@ -137,22 +147,25 @@ design.addEventListener('change', (e) =>
 {
   if (e.target.value == 'js puns')
   {
-    showColors(e.target.value, 1);
+    showColors('Puns', 1);
   }
   else if (e.target.value == 'heart js')
   {
-    showColors(e.target.value, 4);
+    showColors('I', 4);
   }
   else
   {
-    if (e.target.innerHTML = 'Select Theme')
+    if (e.target.value == 'Select Theme')
     {
-      noColor.selected = true;
-
-      if (i > 0)
+      // Until design theme is selected no color options appear
+      for (let i = 0; i < colorOptions.length; i++)
       {
-        color[i].hidden = true;
+        if (i > 0)
+        {
+          colorOptions[i].hidden = true;
+        }
       }
+      noColor.selected = true;
     }
   }
 });
