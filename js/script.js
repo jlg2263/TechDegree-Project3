@@ -22,6 +22,12 @@ color.insertBefore(noColor, color.childNodes[0]);
 noColor.selected = true;
 
 // Register for Activities Info
+const activities = document.querySelector('.activities');
+const activitiesCost = document.createElement('h3');
+activities.appendChild(activitiesCost);
+let totalCost = 0;
+activitiesCost.textContent = 'Total: ';
+
 
 // Payment Info
 const registerButton = document.querySelector('button');
@@ -77,8 +83,6 @@ function showOrHideTip(show, element)
 // Show Colors based on Design Theme
 function showColors(theme, index)
 {
-  noColor.selected = false;
-
   // For loop to traverse the array
   for (let i = 0; i < colorOptions.length; i++)
   {
@@ -170,15 +174,37 @@ design.addEventListener('change', (e) =>
   }
 });
 
-// Color Validation
-// color.addEventListener('change', (e) =>
-// {
+// Activities Section
+activities.addEventListener('change', (e) =>
+{
+  let cost = parseInt(e.target.dataset.cost);
+  let time = e.target.dataset.dayAndTime;
 
-// });
+  if (e.target.checked)
+  {
+    totalCost += cost;
+  }
+  else 
+  {
+    if (!e.target.checked)
+    {
+      totalCost -= cost;
+    }
+  }
+
+  // For loop to traverse array of elements 
+  for (let i = 0; i < ; i++)
+  {
+    
+  }
+  
+  // Display Total 
+  activitiesCost.textContent = 'Total: $' + totalCost;
+});
 
 // Form Submit Listener
 // form.addEventListener('submit', (e) =>
 // {
-//     e.preventDefault();
+//    e.preventDefault();
 
 // });
