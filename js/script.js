@@ -3,9 +3,9 @@
  */
 //Basic Info
 const nameInput = document.getElementById('name');
-const nameSpan = document.getElementById('name-span');
+//const nameErr = document.getElementById('name-span');
 const emailInput = document.getElementById('mail');
-const emailSpan = document.getElementById('mail-span');
+//const emailErr = document.getElementById('mail-span');
 const jobTitle = document.getElementById('title');
 const jobTitleOther = document.getElementById('other-title');
 const jobTitleOtherLabel = document.getElementById('other-title-label');
@@ -39,6 +39,9 @@ const paypal = document.getElementById('paypal');
 const bitcoin = document.getElementById('bitcoin');
 paypal.style.display = 'none';
 bitcoin.style.display = 'none';
+
+// Form & Button DOM Info
+const form = document.querySelector('form');
 const registerButton = document.querySelector('button');
 
 
@@ -77,32 +80,32 @@ function isValidEmail(email)
 // Must be a valid credit card number
 function isValidCreditCard(creditCard) 
 {
-  return /^[^@]+@[^@.]+\.[a-z]+$/i.test(creditCard);
+  return /\d{4}\-\d{4}\-\d{4}\-\d{4}/i.test(creditCard);
 }
 
 // Must be a valid zip code
 function isValidZip(zip) 
 {
-  return /^[^@]+@[^@.]+\.[a-z]+$/i.test(zip);
+  return /^\d{5}([-]|\s*)?(\d{4})?$/i.test(zip);
 }
 
 // Must be a valid CVV
 function isValidCVV(cvv) 
 {
-  return /^[^@]+@[^@.]+\.[a-z]+$/i.test(cvv);
+  return /^\d{3}/i.test(cvv);
 }
 
 // Show element & disable button when show is true, hide when false
-function showOrHideTip(show, element) 
+function showOrHideTip(show, error) 
 {
   if (show) 
   {
-    element.hidden = false;
+    error.style.display = "inherit";
     registerButton.disabled = true;
   } 
   else 
   {
-    element.hidden = true;
+    error.style.display = "none";
     registerButton.disabled = false;
   }
 }
@@ -140,10 +143,11 @@ nameInput.addEventListener('input', (e) =>
 {
   // Create local variables to validate user input
   const text = e.target.value;
-  const valid = isValidName(text);
-  const showTip = text !== "" && !valid;
-  const tooltip = e.target.nextElementSibling;
-  showOrHideTip(showTip, tooltip);
+  const valid = isValidEmail(text);
+  const showErr = text !== "" && !valid;
+  const errInfo = e.target.nextElementSibling;
+  showOrHideTip(showErr, errInfo);
+  
 });
 
 // Email Input Section
@@ -152,9 +156,9 @@ emailInput.addEventListener('input', (e) =>
   // Create local variables to validate user input
   const text = e.target.value;
   const valid = isValidEmail(text);
-  const showTip = text !== "" && !valid;
-  const tooltip = e.target.nextElementSibling;
-  showOrHideTip(showTip, tooltip);
+  const showErr = text !== "" && !valid;
+  const errInfo = e.target.nextElementSibling;
+  showOrHideTip(showErr, errInfo);
 });
 
 
@@ -277,8 +281,12 @@ payment.addEventListener('change', (e) =>
 });
 
 // Form Submit Listener
-// form.addEventListener('submit', (e) =>
-// {
-//    e.preventDefault();
+form.addEventListener('submit', (e) =>
+{
+  // Validate Name
 
-// });
+   e.preventDefault();
+
+   // Validate Email
+
+});
