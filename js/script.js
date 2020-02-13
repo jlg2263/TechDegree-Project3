@@ -3,9 +3,7 @@
  */
 //Basic Info
 const nameInput = document.getElementById('name');
-//const nameErr = document.getElementById('name-span');
 const emailInput = document.getElementById('mail');
-//const emailErr = document.getElementById('mail-span');
 const jobTitle = document.getElementById('title');
 const jobTitleOther = document.getElementById('other-title');
 const jobTitleOtherLabel = document.getElementById('other-title-label');
@@ -31,6 +29,9 @@ activitiesCost.textContent = `Total Cost: $${totalCost}`;
 
 
 // Payment Info
+const ccInput = document.getElementById('cc-num');
+const zipInput = document.getElementById('zip');
+const cvvInput = document.getElementById('cvv');
 const payment = document.getElementById('payment');
 const noPaymentOption = payment.children[0].hidden = true;
 const paymentDefault = payment.children[1].selected = true;
@@ -44,6 +45,21 @@ bitcoin.style.display = 'none';
 const form = document.querySelector('form');
 const registerButton = document.querySelector('button');
 
+// Error Elements
+const nameErr = document.getElementById('name-error');
+const emailErr = document.getElementById('email-error');
+const activityErr = document.getElementById('activity-error');
+const ccErr = document.getElementById('cc-error');
+const zipErr = document.getElementById('zip-error');
+const cvvErr = document.getElementById('cvv-error');
+
+// Set Errors to display none
+nameErr.style.display = 'none';
+emailErr.style.display = 'none';
+activityErr.style.display = 'none';
+ccErr.style.display = 'none';
+zipErr.style.display = 'none';
+cvvErr.style.display = 'none';
 
 // Document window loads
 window.onload = function() 
@@ -74,38 +90,39 @@ function isValidName(name)
 // Must be a valid email address
 function isValidEmail(email) 
 {
-  return /^[^@]+@[^@.]+\.[a-z]+$/i.test(email);
+  return /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/i.test(email);
 }
 
 // Must be a valid credit card number
 function isValidCreditCard(creditCard) 
 {
-  return /\d{4}\-\d{4}\-\d{4}\-\d{4}/i.test(creditCard);
+  return /\d{4}\-\d{4}\-\d{4}\-\d{4}/.test(creditCard);
 }
 
 // Must be a valid zip code
 function isValidZip(zip) 
 {
-  return /^\d{5}([-]|\s*)?(\d{4})?$/i.test(zip);
+  return /^\d{5}([-]|\s*)?(\d{4})?$/.test(zip);
 }
 
 // Must be a valid CVV
 function isValidCVV(cvv) 
 {
-  return /^\d{3}/i.test(cvv);
+  return /^\d{3}/.test(cvv);
 }
 
 // Show element & disable button when show is true, hide when false
-function showOrHideTip(show, error) 
+function showError(show, error) 
 {
   if (show) 
   {
-    error.style.display = "inherit";
+    error.style.color = 'red';
+    error.style.display = 'inherit';
     registerButton.disabled = true;
   } 
   else 
   {
-    error.style.display = "none";
+    error.style.display = 'none';
     registerButton.disabled = false;
   }
 }
@@ -141,24 +158,56 @@ function showColors(theme, index)
 // Name Input Section
 nameInput.addEventListener('input', (e) =>
 {
-  // Create local variables to validate user input
-  const text = e.target.value;
-  const valid = isValidEmail(text);
-  const showErr = text !== "" && !valid;
+  // Call isValid Name
+  const valid = isValidName(e.target.value);
+  const showErr = e.target.value !== "" && !valid;
   const errInfo = e.target.nextElementSibling;
-  showOrHideTip(showErr, errInfo);
-  
+  // Call showError
+  showError(showErr, errInfo);
 });
 
 // Email Input Section
 emailInput.addEventListener('input', (e) =>
 {
-  // Create local variables to validate user input
-  const text = e.target.value;
-  const valid = isValidEmail(text);
-  const showErr = text !== "" && !valid;
+  // Call isValidEmail
+  const valid = isValidEmail(e.target.value);
+  const showErr = e.target.value !== "" && !valid;
   const errInfo = e.target.nextElementSibling;
-  showOrHideTip(showErr, errInfo);
+  // Call showError
+  showError(showErr, errInfo);
+});
+
+// Credit Card Input Section
+ccInput.addEventListener('input', (e) =>
+{
+  // Call isValidCreditCard
+  const valid = isValidCreditCard(e.target.value);
+  const showErr = e.target.value !== "" && !valid;
+  const errInfo = e.target.nextElementSibling;
+  // call ShowError
+  showError(showErr, errInfo);
+});
+
+// Zip Input Section
+zipInput.addEventListener('input', (e) =>
+{
+  // Call isValidZip
+  const valid = isValidZip(e.target.value);
+  const showErr = e.target.value !== "" && !valid;
+  const errInfo = e.target.nextElementSibling;
+  // Call ShowError
+  showError(showErr, errInfo);
+});
+
+// CVV Input Section
+cvvInput.addEventListener('input', (e) =>
+{
+  // Call isValidCVV
+  const valid = isValidCVV(e.target.value);
+  const showErr = e.target.value !== "" && !valid;
+  const errInfo = e.target.nextElementSibling;
+  // Call ShowError
+  showError(showErr, errInfo);
 });
 
 
@@ -283,10 +332,63 @@ payment.addEventListener('change', (e) =>
 // Form Submit Listener
 form.addEventListener('submit', (e) =>
 {
-  // Validate Name
+  // Declare local variable for counter
+  let counter = 0;
 
-   e.preventDefault();
+  // Validate Name
+  if (!isValidName())
+  {
+    showError();
+    nameInput.focus();
+  }
 
    // Validate Email
+  if (!isValidName())
+  {
+    showError();
+    nameInput.focus();
+  }
 
+  // Validate Activity
+  // For loop to traverse array of elements 
+  for (let i = 0; i < activitiesOptions.length; i++)
+  {
+    if (!activitiesOptions[i].checked)
+    {
+      counter++;
+    }
+
+    if (counter == 0)
+    {
+      activityErr.style.display = '';
+      registerButton.disabled = true;
+    }
+    else
+    {
+      activityErr.style.display = 'none';
+      registerButton.disabled = false;
+    }
+  }
+    // Validate Credit Card
+  if (!isValidCreditCard())
+  {
+    showError();
+    ccInput.focus();
+  }
+
+  // Validate Zip
+  if (!isValidZip())
+  {
+    showError();
+    zipInput.focus();
+  }
+
+  // Validate CVV
+  if (!isValidCVV())
+  {
+    showError();
+    cvvInput.focus();
+  }
+
+   e.preventDefault();
 });

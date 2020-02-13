@@ -21,11 +21,11 @@
         
         <label for="name">Name:</label>
         <input type="text" id="name" name="user-name">
-        <span>Can only contain letters A-Z</span>
+        <span id="name-error">Name cannot be blank, and only accepts letters a-z</span>
         
         <label for="mail">Email:</label>
         <input type="email" id="mail" name="user-email">
-        <span>Must be a valid email address</span>
+        <span id="email-error">Email field must be a validly formatted email address</span>
         
         <label for="title">Job Role</label>
         <select id="title" name="user-title">
@@ -105,8 +105,8 @@
           <label>
             <input type="checkbox" name="npm" data-day-and-time="Wednesday 1pm-4pm" data-cost="100"> 
             npm Workshop — Wednesday 1pm-4pm, $100
-          </label>
-                  	
+          </label>   
+        <span id="activity-error">User must select at least one checkbox under the "Register for Activities" section of the form</span>       	
       </fieldset>
       <fieldset>
         <legend>Payment Info</legend>
@@ -123,17 +123,20 @@
 
           <div class="col-6 col">
             <label for="cc-num">Card Number:</label>
-        	  <input id="cc-num" name="user-cc-num" type="text">
+            <input id="cc-num" name="user-cc-num" type="text">
+            <span id="cc-error">Credit Card field should only accept a number between 13 - 16 digits</span>
           </div>
 
           <div class="col-3 col">
             <label for="zip">Zip Code:</label>
-            <input id="zip" name="user-zip" type="text"> 
+            <input id="zip" name="user-zip" type="text">
+            <span id="zip-error">The Zip Code field should accept a 5-digit number1</span>
           </div>
 
           <div class="col-3 col">
             <label for="cvv">CVV:</label>
-            <input id="cvv" name="user-cvv" type="text"> 
+            <input id="cvv" name="user-cvv" type="text">
+            <span id="cvv-error">The CVV should only accept a number that is exactly 3 digits long</span>
           </div>
 
           <label for="exp-month">Expiration Date:</label>
