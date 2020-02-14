@@ -1,3 +1,7 @@
+/*****
+ * Tech-Degree Project 3 Form Validation
+*****/
+
 /**
  * Declare global variables
  */
@@ -99,13 +103,6 @@ function isValidCreditCard(creditCard)
   return /^\d{4}\s?\d{4}\s?\d{4}\s?\d{4}$/.test(creditCard);
 }
 
-// Reformat credit card number
-function formatCreditCard(creditCard) 
-{
-  const regex = /^(\d{4})\s?(\d{4})\s?(\d{4})\s?(\d{4})$/;
-  return creditCard.replace(regex, '$1-$2-$3-$4');
-}
-
 // Must be a valid zip code
 function isValidZip(zip) 
 {
@@ -193,11 +190,6 @@ ccInput.addEventListener('input', (e) =>
   const errInfo = e.target.nextElementSibling;
   // call ShowError
   showError(showErr, errInfo);
-});
-
-ccInput.addEventListener('blur', (e) => 
-{
-  e.target.value = formatCreditCard(e.target.value);
 });
 
 // Zip Input Section
@@ -345,13 +337,15 @@ payment.addEventListener('change', (e) =>
 form.addEventListener('submit', (e) =>
 {
   // Declare local variable for counter
-  let counter = 0;
+  let activityCounter = 0;
+  let errCounter = 0;
 
   // Validate Name
   if (!isValidName(nameInput.value))
   {
     showError(true, nameInput.nextElementSibling);
     nameInput.focus();
+    errCounter++;
   }
 
    // Validate Email
@@ -359,6 +353,7 @@ form.addEventListener('submit', (e) =>
   {
     showError(true, emailInput.nextElementSibling);
     emailInput.focus();
+    errCounter++;
   }
 
   // Validate Activity
@@ -367,19 +362,21 @@ form.addEventListener('submit', (e) =>
   {
     if (!activitiesOptions[i].checked)
     {
-      counter++;
+      activityCounter++;
     }
+  }
 
-    if (counter == 0)
-    {
-      activityErr.style.display = '';
-      registerButton.disabled = true;
-    }
-    else
-    {
-      activityErr.style.display = 'none';
-      registerButton.disabled = false;
-    }
+  if (activityCounter == 7)
+  {
+    activityErr.style.color = 'red';
+    activityErr.style.display = '';
+    registerButton.disabled = true;
+    errCounter++;
+  }
+  else
+  {
+    activityErr.style.display = 'none';
+    registerButton.disabled = false;
   }
   
   // If credit card is the selected payment
@@ -390,6 +387,7 @@ form.addEventListener('submit', (e) =>
     {
       showError(true, ccInput.nextElementSibling);
       ccInput.focus();
+      errCounter++;
     }
 
     // Validate Zip
@@ -397,6 +395,7 @@ form.addEventListener('submit', (e) =>
     {
       showError(true, zipInput.nextElementSibling);
       zipInput.focus();
+      errCounter++;
     }
 
     // Validate CVV
@@ -404,8 +403,14 @@ form.addEventListener('submit', (e) =>
     {
       showError(true, cvvInput.nextElementSibling);
       cvvInput.focus();
+      errCounter++;
     }
   }
 
-   e.preventDefault();
+  // If errors still exist dont process info
+  if (errCounter !==0)
+  (
+    e.preventDefault()
+  )
+
 });
