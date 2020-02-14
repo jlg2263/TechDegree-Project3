@@ -96,7 +96,14 @@ function isValidEmail(email)
 // Must be a valid credit card number
 function isValidCreditCard(creditCard) 
 {
-  return /\d{4}\-\d{4}\-\d{4}\-\d{4}/.test(creditCard);
+  return /^\d{4}\s?\d{4}\s?\d{4}\s?\d{4}$/.test(creditCard);
+}
+
+// Reformat credit card number
+function formatCreditCard(creditCard) 
+{
+  const regex = /^(\d{4})\s?(\d{4})\s?(\d{4})\s?(\d{4})$/;
+  return creditCard.replace(regex, '$1-$2-$3-$4');
 }
 
 // Must be a valid zip code
@@ -186,6 +193,11 @@ ccInput.addEventListener('input', (e) =>
   const errInfo = e.target.nextElementSibling;
   // call ShowError
   showError(showErr, errInfo);
+});
+
+ccInput.addEventListener('blur', (e) => 
+{
+  e.target.value = formatCreditCard(e.target.value);
 });
 
 // Zip Input Section
@@ -336,17 +348,17 @@ form.addEventListener('submit', (e) =>
   let counter = 0;
 
   // Validate Name
-  if (!isValidName())
+  if (!isValidName(nameInput.value))
   {
-    showError();
+    showError(true, nameInput.nextElementSibling);
     nameInput.focus();
   }
 
    // Validate Email
-  if (!isValidName())
+  if (!isValidEmail(emailInput.value))
   {
-    showError();
-    nameInput.focus();
+    showError(true, emailInput.nextElementSibling);
+    emailInput.focus();
   }
 
   // Validate Activity
@@ -369,25 +381,30 @@ form.addEventListener('submit', (e) =>
       registerButton.disabled = false;
     }
   }
+  
+  // If credit card is the selected payment
+  if (creditCard.selected = true)
+  {
     // Validate Credit Card
-  if (!isValidCreditCard())
-  {
-    showError();
-    ccInput.focus();
-  }
+    if (!isValidCreditCard(ccInput.value))
+    {
+      showError(true, ccInput.nextElementSibling);
+      ccInput.focus();
+    }
 
-  // Validate Zip
-  if (!isValidZip())
-  {
-    showError();
-    zipInput.focus();
-  }
+    // Validate Zip
+    if (!isValidZip(zipInput.value))
+    {
+      showError(true, zipInput.nextElementSibling);
+      zipInput.focus();
+    }
 
-  // Validate CVV
-  if (!isValidCVV())
-  {
-    showError();
-    cvvInput.focus();
+    // Validate CVV
+    if (!isValidCVV(cvvInput.value))
+    {
+      showError(true, cvvInput.nextElementSibling);
+      cvvInput.focus();
+    }
   }
 
    e.preventDefault();
