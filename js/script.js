@@ -6,8 +6,11 @@
  * Declare global variables
  */
 //Basic Info
+const basicInfo = document.querySelectorAll('fieldset')[0];
 const nameInput = document.getElementById('name');
 const emailInput = document.getElementById('mail');
+const emailLabel = document.querySelectorAll('label')[1];
+const jobRoleLabel = document.querySelectorAll('label')[2];
 const jobTitle = document.getElementById('title');
 const jobTitleOther = document.getElementById('other-title');
 const jobTitleOtherLabel = document.getElementById('other-title-label');
@@ -24,6 +27,7 @@ color.insertBefore(noColor, color.childNodes[0]);
 noColor.selected = true;
 
 // Register for Activities Info
+const activityInfo = document.querySelectorAll('fieldset')[2];
 const activities = document.querySelector('.activities');
 const activitiesOptions = activities.querySelectorAll('input');
 const activitiesCost = document.createElement('h3');
@@ -33,6 +37,9 @@ activitiesCost.textContent = `Total Cost: $${totalCost}`;
 
 
 // Payment Info
+const ccDiv = document.querySelector('.col-6');
+const zipDiv = document.querySelectorAll('.col-3')[0];
+const cvvDiv = document.querySelectorAll('.col-3')[1];
 const ccInput = document.getElementById('cc-num');
 const zipInput = document.getElementById('zip');
 const cvvInput = document.getElementById('cvv');
@@ -50,12 +57,24 @@ const form = document.querySelector('form');
 const registerButton = document.querySelector('button');
 
 // Error Elements
-const nameErr = document.getElementById('name-error');
-const emailErr = document.getElementById('email-error');
-const activityErr = document.getElementById('activity-error');
-const ccErr = document.getElementById('cc-error');
-const zipErr = document.getElementById('zip-error');
-const cvvErr = document.getElementById('cvv-error');
+const nameErr = document.createElement('span');
+nameErr.innerHTML = `Name cannot be blank, and only accepts letters a-z`;
+basicInfo.insertBefore(nameErr, emailLabel);
+const emailErr = document.createElement('span');
+emailErr.innerHTML = `Email field must be a validly formatted email address`;
+basicInfo.insertBefore(emailErr, jobRoleLabel);
+const activityErr = document.createElement('span');
+activityErr.innerHTML = `User must select at least one checkbox under the "Register for Activities" section of the form`;
+activityInfo.appendChild(activityErr);
+const ccErr = document.createElement('span');
+ccErr.innerHTML = `Credit Card field should only accept a number between 13 - 16 digits`;
+ccDiv.appendChild(ccErr);
+const zipErr = document.createElement('span');
+zipErr.innerHTML = `The Zip Code field should accept a 5-digit number1`;
+zipDiv.appendChild(zipErr);
+const cvvErr = document.createElement('span');
+cvvErr.innerHTML = `The CVV should only accept a number that is exactly 3 digits long`;
+cvvDiv.appendChild(cvvErr);
 
 // Set Errors to display none
 nameErr.style.display = 'none';
@@ -100,7 +119,7 @@ function isValidEmail(email)
 // Must be a valid credit card number
 function isValidCreditCard(creditCard) 
 {
-  return /^\d{4}\s?\d{4}\s?\d{4}\s?\d{4}$/.test(creditCard);
+  return /(^[\d]{13,16})$/.test(creditCard);
 }
 
 // Must be a valid zip code
@@ -122,12 +141,10 @@ function showError(show, error)
   {
     error.style.color = 'red';
     error.style.display = 'inherit';
-    registerButton.disabled = true;
   } 
   else 
   {
     error.style.display = 'none';
-    registerButton.disabled = false;
   }
 }
 
@@ -336,7 +353,17 @@ payment.addEventListener('change', (e) =>
 // Form Submit Listener
 form.addEventListener('submit', (e) =>
 {
+  // Call validForm to validate and prevent refresh 
+  if (!validForm())
+  {
+    e.preventDefault();
+  }
+});
+
+function validForm()
+{
   // Declare local variable for counter
+  let valid = true;
   let activityCounter = 0;
   let errCounter = 0;
 
@@ -370,17 +397,15 @@ form.addEventListener('submit', (e) =>
   {
     activityErr.style.color = 'red';
     activityErr.style.display = '';
-    registerButton.disabled = true;
     errCounter++;
   }
   else
   {
     activityErr.style.display = 'none';
-    registerButton.disabled = false;
   }
   
   // If credit card is the selected payment
-  if (creditCard.selected = true)
+  if (payment.value == 'credit card')
   {
     // Validate Credit Card
     if (!isValidCreditCard(ccInput.value))
@@ -408,9 +433,10 @@ form.addEventListener('submit', (e) =>
   }
 
   // If errors still exist dont process info
-  if (errCounter !==0)
-  (
-    e.preventDefault()
-  )
+  if (errCounter !== 0)
+  {
+    valid = false;
+  }
 
-});
+  return valid;
+}
