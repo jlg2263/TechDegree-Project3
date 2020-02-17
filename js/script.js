@@ -63,6 +63,9 @@ basicInfo.insertBefore(nameErr, emailLabel);
 const emailErr = document.createElement('span');
 emailErr.innerHTML = `Email field must be a validly formatted email address`;
 basicInfo.insertBefore(emailErr, jobRoleLabel);
+const jobErr = document.createElement('span');
+jobErr.innerHTML = `Other Job cannot be blank if Other is selected`;
+basicInfo.appendChild(jobErr);
 const activityErr = document.createElement('span');
 activityErr.innerHTML = `User must select at least one checkbox under the "Register for Activities" section of the form`;
 activityInfo.appendChild(activityErr);
@@ -79,6 +82,7 @@ cvvDiv.appendChild(cvvErr);
 // Set Errors to display none
 nameErr.style.display = 'none';
 emailErr.style.display = 'none';
+jobErr.style.display = 'none';
 activityErr.style.display = 'none';
 ccErr.style.display = 'none';
 zipErr.style.display = 'none';
@@ -351,53 +355,42 @@ payment.addEventListener('change', (e) =>
 });
 
 // Form Submit Listener
-form.addEventListener('submit', (e) =>
-{
-  // Call validForm to validate and prevent refresh 
-  if (!validForm())
-  {
-    e.preventDefault();
-  }
-});
-
-function validForm()
+registerButton.addEventListener('click', (e) =>
 {
   // Declare local variable for counter
-  let valid = true;
   let activityCounter = 0;
-  let errCounter = 0;
 
   // Validate Name
   if (!isValidName(nameInput.value))
   {
+    e.preventDefault();
     showError(true, nameInput.nextElementSibling);
     nameInput.focus();
-    errCounter++;
   }
 
    // Validate Email
   if (!isValidEmail(emailInput.value))
   {
+    e.preventDefault();
     showError(true, emailInput.nextElementSibling);
     emailInput.focus();
-    errCounter++;
   }
 
   // Validate Activity
   // For loop to traverse array of elements 
   for (let i = 0; i < activitiesOptions.length; i++)
   {
-    if (!activitiesOptions[i].checked)
+    if (activitiesOptions[i].checked)
     {
       activityCounter++;
     }
   }
 
-  if (activityCounter == 7)
+  if (activityCounter === 0)
   {
+    e.preventDefault();
     activityErr.style.color = 'red';
     activityErr.style.display = '';
-    errCounter++;
   }
   else
   {
@@ -410,33 +403,25 @@ function validForm()
     // Validate Credit Card
     if (!isValidCreditCard(ccInput.value))
     {
+      e.preventDefault();
       showError(true, ccInput.nextElementSibling);
       ccInput.focus();
-      errCounter++;
     }
 
     // Validate Zip
     if (!isValidZip(zipInput.value))
     {
+      e.preventDefault();
       showError(true, zipInput.nextElementSibling);
       zipInput.focus();
-      errCounter++;
     }
 
     // Validate CVV
     if (!isValidCVV(cvvInput.value))
     {
+      e.preventDefault();
       showError(true, cvvInput.nextElementSibling);
       cvvInput.focus();
-      errCounter++;
     }
   }
-
-  // If errors still exist dont process info
-  if (errCounter !== 0)
-  {
-    valid = false;
-  }
-
-  return valid;
-}
+});
