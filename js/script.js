@@ -358,29 +358,30 @@ form.addEventListener('submit', (e) =>
 {
   // Declare local variable for counter
   let activityCounter = 0;
+  let errCounter = 0;
 
   // Validate Name
   if (!isValidName(nameInput.value))
   {
-    e.preventDefault();
     showError(true, nameInput.nextElementSibling);
     nameInput.focus();
+    errCounter++;
   }
 
    // Validate Email
   if (!isValidEmail(emailInput.value))
   {
-    e.preventDefault();
     showError(true, emailInput.nextElementSibling);
     emailInput.focus();
+    errCounter++;
   }
 
   // Other Job Title validation
   if (jobTitle.value == 'other' && jobTitleOther.value == '')
   {
-    e.preventDefault();
     showError(true, jobTitleOther.nextElementSibling);
     jobTitleOther.focus();
+    errCounter++;
   }
 
   // Validate Activity
@@ -395,9 +396,9 @@ form.addEventListener('submit', (e) =>
 
   if (activityCounter == 0)
   {
-    e.preventDefault();
     activityErr.style.color = 'red';
     activityErr.style.display = '';
+    errCounter++;
   }
   else
   {
@@ -410,25 +411,32 @@ form.addEventListener('submit', (e) =>
     // Validate Credit Card
     if (!isValidCreditCard(ccInput.value))
     {
-      e.preventDefault();
       showError(true, ccInput.nextElementSibling);
       ccInput.focus();
+      errCounter++;
     }
 
     // Validate Zip
     if (!isValidZip(zipInput.value))
     {
-      e.preventDefault();
       showError(true, zipInput.nextElementSibling);
       zipInput.focus();
+      errCounter++;
     }
 
     // Validate CVV
     if (!isValidCVV(cvvInput.value))
     {
-      e.preventDefault();
       showError(true, cvvInput.nextElementSibling);
       cvvInput.focus();
+      errCounter++;
     }
   }
+
+  // Prevent Refresh if error still exist
+  if (errCounter !== 0)
+  {
+    e.preventDefault();
+  }
+
 });
