@@ -134,7 +134,7 @@ function isValidZip(zip)
 // Must be a valid CVV
 function isValidCVV(cvv) 
 {
-  return /^\d{3}/.test(cvv);
+  return /^\d{3}$/.test(cvv);
 }
 
 // Show element & disable button when show is true, hide when false
