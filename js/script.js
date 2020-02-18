@@ -54,7 +54,6 @@ bitcoin.style.display = 'none';
 
 // Form & Button DOM Info
 const form = document.querySelector('form');
-const registerButton = document.querySelector('button');
 
 // Error Elements
 const nameErr = document.createElement('span');
@@ -355,7 +354,7 @@ payment.addEventListener('change', (e) =>
 });
 
 // Form Submit Listener
-registerButton.addEventListener('click', (e) =>
+form.addEventListener('submit', (e) =>
 {
   // Declare local variable for counter
   let activityCounter = 0;
@@ -376,6 +375,14 @@ registerButton.addEventListener('click', (e) =>
     emailInput.focus();
   }
 
+  // Other Job Title validation
+  if (jobTitle.value == 'other' && jobTitleOther.value == '')
+  {
+    e.preventDefault();
+    showError(true, jobTitleOther.nextElementSibling);
+    jobTitleOther.focus();
+  }
+
   // Validate Activity
   // For loop to traverse array of elements 
   for (let i = 0; i < activitiesOptions.length; i++)
@@ -386,7 +393,7 @@ registerButton.addEventListener('click', (e) =>
     }
   }
 
-  if (activityCounter === 0)
+  if (activityCounter == 0)
   {
     e.preventDefault();
     activityErr.style.color = 'red';
